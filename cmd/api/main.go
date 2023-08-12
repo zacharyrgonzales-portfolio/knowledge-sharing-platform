@@ -2,8 +2,9 @@ package main
 
 import (
 	"github.com/gin-gonic/gin"
-    "github.com/zacharyrgonzales-portfolio/knowledge-sharing-platform/pkg/db"
-    "github.com/zacharyrgonzales-portfolio/knowledge-sharing-platform/models"
+	"github.com/zacharyrgonzales-portfolio/knowledge-sharing-platform/handlers"
+	"github.com/zacharyrgonzales-portfolio/knowledge-sharing-platform/models"
+	"github.com/zacharyrgonzales-portfolio/knowledge-sharing-platform/pkg/db"
 )
 
 func main() {
@@ -19,6 +20,8 @@ func main() {
             "message": "Welcome to the Knowledge Sharing Platform!",
         })
     })
+
+	r.POST("/signup", handlers.SignUp)
 
 	// Start the server on port 8080
 	r.Run(":8080")
