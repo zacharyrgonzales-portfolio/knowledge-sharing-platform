@@ -2,8 +2,8 @@ package main
 
 import (
 	"github.com/gin-gonic/gin"
-	"knowledge-sharing-platform/pkg/db"
-	"knowledge-sharing-platform/models"
+    "github.com/zacharyrgonzales-portfolio/knowledge-sharing-platform/pkg/db"
+    "github.com/zacharyrgonzales-portfolio/knowledge-sharing-platform/models"
 )
 
 func main() {
@@ -22,4 +22,9 @@ func main() {
 
 	// Start the server on port 8080
 	r.Run(":8080")
+
+	db := db.ConnectToDB()
+
+	//Migrate the schema
+	db.AutoMigrate(&models.User{}, &models.Article{}, &models.Comment{})
 }

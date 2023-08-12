@@ -7,7 +7,7 @@ import (
 	"fmt"
 )
 
-func connectToDB() *gorm.DB {
+func ConnectToDB() *gorm.DB {
 	dsn := "user=zach dbname=knowledge_sharing_platform sslmode=disable"
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {
