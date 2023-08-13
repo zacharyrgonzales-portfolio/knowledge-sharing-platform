@@ -11,8 +11,8 @@ func main() {
 	// Connect to the PostgresSQL database using GORM
 	db := db.ConnectToDB()
 
-	// Migrate the schema
-	db.AutoMigrate(&models.User{})
+	// Migrate the schema for User and Article models
+	db.AutoMigrate(&models.User{},&models.Article{})
 
 	// Set Gin to release mode in production
 	// gin.SetMode(gin.ReleaseMode)
@@ -33,6 +33,9 @@ func main() {
 
 	// Login POST
 	r.POST("/login", handlers.Login)
+
+	// Create Article POST
+	r.POST("/articles", handlers.CreateArticle)
 
 	// Start the server on port 8080
 	r.Run(":8080")
