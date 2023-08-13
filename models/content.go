@@ -31,8 +31,8 @@ type User struct {
 	Username  string `gorm:"unique;not null"`
 	Email     string `gorm:"unique;not null"`
 	PasswordHash  string `gorm:"not null"`
-	Articles  []Article // Relationship with articles struct
-	Comments  []Comment // Relationship with comments struct
+	Articles  []Article `gorm:"foreignKey:AuthorID"` // Relationship with articles struct
+	Comments  []Comment `gorm:"foreignKey:AuthorID"` // Relationship with comments struct
 	CreatedAt time.Time
 	UpdatedAt time.Time
 }
