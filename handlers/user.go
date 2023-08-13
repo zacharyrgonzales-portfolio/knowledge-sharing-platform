@@ -8,6 +8,8 @@ import (
 )
 
 func SignUp(c *gin.Context) {
+
+	// Gin tries to serialize the entire `user`` object, including Article and Comments slice fields and errors. Since we don't need to return the entire user object we can create a response that includes only the fields we want to return
 	
 	// Define a struct specifically for sign-up input
 	type SignUpInput struct {
@@ -16,9 +18,10 @@ func SignUp(c *gin.Context) {
 		Password string `json:"Password" binding:"required"`
 	}
 
+	// Bind the JSON body of the request to the SignUpInput struct and check for validation errors
 	var input SignUpInput
 	if err := c.ShouldBindJSON(&input); err != nil {
-		c.JSON(400, gin.H{"error": "Invalid input"})
+		c.JSON(400, gin.H{"error": "Invalid input with either Username, Email and/or Password input"})
 		return
 	}
 
@@ -45,4 +48,53 @@ func SignUp(c *gin.Context) {
 	}
 
 	c.JSON(201, user)
+}
+
+func Login(c *gin.Context) {
+	
+	// Define a struct for login input
+	type LoginInput struct {
+		Username string `json:"Username" binding:"required"`
+		Password string `json:"Password" binding:"required"`
+	}
+
+	// Bind the JSON body of the request to the LoginInput struct and check for the validation errors
+	var input LoginInput
+	if err := c.ShouldBindJSON(&input); err != nil {
+		c.JSON(400, gin.H{"error": "Invalid input with either Username and/or Password"})
+		return
+	}
+
+	// Find the user by username
+	dbInstance := db.ConnectToDB()
+	var user models.User
+	if err := dbInstance.Select("id, username, password_hash").Where("username = ?", input.Username).First(&user).Error; err != nil {
+		c.JSON(400, gin.H{"error": "User not found"})
+		return
+	}
+	
+	
+
+	// Check the password
+	if err := bcrypt.CompareHashAndPassword([]byte(user.PasswordHash), []byte(input.Password)); err != nil {
+		c.JSON(400, gin.H{"error": "Incorrect password"})
+		return
+	}
+
+	// Gin tries to serialize the entire `user`` object, including Article and Comments slice fields and errors. Since we don't need to return the entire user object we can create a response that includes only the fields we want to return
+
+	// Define a struct for the response
+	type LoginResponse struct {
+		Username string `json:"Username"`
+		Message string `json:"message"`
+	}
+
+	response := LoginResponse{
+		Username: user.Username,
+		Message: "Login Successful!",
+	}
+
+	// TODO: Generate an authenitcation token (e.g., JWT)
+
+	c.JSON(200, response)
 }

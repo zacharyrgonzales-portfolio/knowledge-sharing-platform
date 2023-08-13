@@ -14,14 +14,19 @@ func main() {
 	// Create a default Gin engine
 	r := gin.Default()
 
-    // Set up routes
+    // Set Up Routes
+	// Test Get
     r.GET("/", func(c *gin.Context) {
         c.JSON(200, gin.H{
             "message": "Welcome to the Knowledge Sharing Platform!",
         })
     })
 
+	// Signup POST
 	r.POST("/signup", handlers.SignUp)
+
+	// Login POST
+	r.POST("/login", handlers.Login)
 
 	// Start the server on port 8080
 	r.Run(":8080")

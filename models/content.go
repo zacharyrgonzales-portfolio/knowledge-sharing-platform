@@ -11,7 +11,7 @@ type Article struct {
 	Content   string
 	AuthorID  uint
 	Category  string
-	Tags      []string
+	Tags      string
 	Comments  []Comment
 	CreatedAt time.Time
 	UpdatedAt time.Time
