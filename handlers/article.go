@@ -46,3 +46,42 @@ func CreateArticle(c *gin.Context) {
 	// Respond with newly created article
 	c.JSON(201, article)
 }
+
+// GetArticles handles the retreival of articles by the author
+func GetArticles(c *gin.Context) {
+	// Connect to the database
+	dbInstance := db.ConnectToDB()
+
+	// Declare a slice to hold the articles
+	var articles []models.Article
+
+	// Query the database for all articles
+	if err := dbInstance.Find(&articles).Error; err != nil {
+		c.JSON(500, gin.H{"error": "Failed to retrieve articles"})
+		return
+	}
+
+	// Respond with the articles as JSON
+	c.JSON(200, articles)
+}
+
+// GetArticle handles the retrieval of an article by ID
+func GetArticle(c *gin.Context) {
+	// Connect to the database
+	dbInstance := db.ConnectToDB()
+
+	// Get the article ID from the URL parameter
+	articleID := c.Param("id")
+
+	// Declare a variable to hold the article
+	var article models.Article
+
+	// Query the database for the article by ID
+	if err := dbInstance.First(&article, articleID).Error; err != nil {
+		c.JSON(404, gin.H{"error": "Article not found"})
+		return
+	}
+
+	// Respond with the article as JSON
+	c.JSON(200, article)
+}
