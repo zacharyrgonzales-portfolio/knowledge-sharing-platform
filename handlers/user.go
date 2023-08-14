@@ -1,20 +1,20 @@
 package handlers
 
 import (
-    "github.com/gin-gonic/gin"
-    "golang.org/x/crypto/bcrypt"
+	"github.com/gin-gonic/gin"
+	"github.com/zacharyrgonzales-portfolio/knowledge-sharing-platform/models"
 	"github.com/zacharyrgonzales-portfolio/knowledge-sharing-platform/pkg/db"
-    "github.com/zacharyrgonzales-portfolio/knowledge-sharing-platform/models"
+	"golang.org/x/crypto/bcrypt"
 )
 
 func SignUp(c *gin.Context) {
 
 	// Gin tries to serialize the entire `user`` object, including Article and Comments slice fields and errors. Since we don't need to return the entire user object we can create a response that includes only the fields we want to return
-	
+
 	// Define a struct specifically for sign-up input
 	type SignUpInput struct {
 		Username string `json:"Username" binding:"required"`
-		Email string `json:"Email" binding:"required"`
+		Email    string `json:"Email" binding:"required"`
 		Password string `json:"Password" binding:"required"`
 	}
 
@@ -25,17 +25,17 @@ func SignUp(c *gin.Context) {
 		return
 	}
 
-    // Hash the password
-    hashedPassword, err := bcrypt.GenerateFromPassword([]byte(input.Password), bcrypt.DefaultCost)
-    if err != nil {
-        c.JSON(500, gin.H{"error": "Failed to hash password"})
-        return
-    }
+	// Hash the password
+	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(input.Password), bcrypt.DefaultCost)
+	if err != nil {
+		c.JSON(500, gin.H{"error": "Failed to hash password"})
+		return
+	}
 
 	// Create the user using the models.User struct
 	user := models.User{
-		Username: input.Username,
-		Email: input.Email,
+		Username:     input.Username,
+		Email:        input.Email,
 		PasswordHash: string(hashedPassword),
 	}
 
@@ -44,14 +44,14 @@ func SignUp(c *gin.Context) {
 	result := dbInstance.Create(&user)
 	if result.Error != nil {
 		c.JSON(500, gin.H{"error": "Failed to create user"})
-		return 
+		return
 	}
 
 	c.JSON(201, user)
 }
 
 func Login(c *gin.Context) {
-	
+
 	// Define a struct for login input
 	type LoginInput struct {
 		Username string `json:"Username" binding:"required"`
@@ -72,8 +72,6 @@ func Login(c *gin.Context) {
 		c.JSON(400, gin.H{"error": "User not found"})
 		return
 	}
-	
-	
 
 	// Check the password
 	if err := bcrypt.CompareHashAndPassword([]byte(user.PasswordHash), []byte(input.Password)); err != nil {
@@ -86,12 +84,12 @@ func Login(c *gin.Context) {
 	// Define a struct for the response
 	type LoginResponse struct {
 		Username string `json:"Username"`
-		Message string `json:"message"`
+		Message  string `json:"message"`
 	}
 
 	response := LoginResponse{
 		Username: user.Username,
-		Message: "Login Successful!",
+		Message:  "Login Successful!",
 	}
 
 	// TODO: Generate an authenitcation token (e.g., JWT)

@@ -27,12 +27,12 @@ type Comment struct {
 }
 
 type User struct {
-	ID        uint 	 `gorm:"primaryKey"`
-	Username  string `gorm:"unique;not null"`
-	Email     string `gorm:"unique;not null"`
-	PasswordHash  string `gorm:"not null"`
-	Articles  []Article `gorm:"foreignKey:AuthorID"` // Relationship with articles struct
-	Comments  []Comment `gorm:"foreignKey:AuthorID"` // Relationship with comments struct
-	CreatedAt time.Time
-	UpdatedAt time.Time
+	ID           uint      `gorm:"primaryKey"`
+	Username     string    `gorm:"unique;not null"`
+	Email        string    `gorm:"unique;not null"`
+	PasswordHash string    `gorm:"not null"`
+	Articles     []Article `gorm:"foreignKey:AuthorID"` // Relationship with articles struct
+	Comments     []Comment `gorm:"foreignKey:AuthorID"` // Relationship with comments struct
+	CreatedAt    time.Time
+	UpdatedAt    time.Time
 }

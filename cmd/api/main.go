@@ -12,7 +12,7 @@ func main() {
 	db := db.ConnectToDB()
 
 	// Migrate the schema for User and Article models
-	db.AutoMigrate(&models.User{},&models.Article{})
+	db.AutoMigrate(&models.User{}, &models.Article{})
 
 	// Set Gin to release mode in production
 	// gin.SetMode(gin.ReleaseMode)
@@ -20,13 +20,13 @@ func main() {
 	// Create a default Gin engine
 	r := gin.Default()
 
-    // Set Up Routes
+	// Set Up Routes
 	// Test Get
-    r.GET("/", func(c *gin.Context) {
-        c.JSON(200, gin.H{
-            "message": "Welcome to the Knowledge Sharing Platform!",
-        })
-    })
+	r.GET("/", func(c *gin.Context) {
+		c.JSON(200, gin.H{
+			"message": "Welcome to the Knowledge Sharing Platform!",
+		})
+	})
 
 	// Signup POST
 	r.POST("/signup", handlers.SignUp)
